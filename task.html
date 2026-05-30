@@ -1,1 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A4-INTERACTIVE_JS_TASK_MANAGER</title>
 
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:500px;
+      background:white;
+      padding:25px;
+      border-radius:15px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:20px;
+      color:#1d2671;
+    }
+
+    .task-input{
+      display:flex;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .task-input input{
+      flex:1;
+      padding:12px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      outline:none;
+      font-size:16px;
+    }
+
+    .task-input input:focus{
+      border-color:#1d2671;
+    }
+
+    .task-input button{
+      padding:12px 18px;
+      border:none;
+      background:#1d2671;
+      color:white;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.3s;
+      font-size:15px;
+    }
+    .task-input button:hover{
+      background:#16205a;
+    }
+
+    ul{
+      list-style:none;
+    }
+
+    li{
+      background:#f4f4f4;
+      margin-bottom:12px;
+      padding:14px;
+      border-radius:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      transition:0.3s;
+    }
+
+    li:hover{
+      transform:scale(1.02);
+    }
+
+    .task-text{
+      flex:1;
+      font-size:16px;
+    }
+
+    .completed{
+      text-decoration:line-through;
+      color:gray;
+    }
+
+    .buttons{
+      display:flex;
+      gap:8px;
+    }
+
+    .complete-btn{
+      background:#28a745;
+    }
+
+    .delete-btn{
+      background:#dc3545;
+    }
+
+    .buttons button{
+      border:none;
+      color:white;
+      padding:8px 12px;
+      border-radius:6px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .buttons button:hover{
+      opacity:0.8;
+    }
+
+    @media(max-width:500px){
+
+      .task-input{
+        flex-direction:column;
+      }
+
+      .task-input button{
+        width:100%;
+      }
+
+      li{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+      }
+
+      .buttons{
+        width:100%;
+      }
+
+      .buttons button{
+        flex:1;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Task Manager</h1>
+    <div class="task-input">
+      <input type="text" id="taskInput" placeholder="Enter your task">
+      <button onclick="addTask()">Add Task</button>
+    </div>
+    <ul id="taskList"></ul>
+  </div>
+  <script>
+
+    // Array to store tasks
+    let tasks = [];
+    // Add Task Function
+    function addTask(){
+      let taskInput = document.getElementById("taskInput");
+      let taskValue = taskInput.value.trim();
+      if(taskValue === ""){
+        alert("Please enter a task");
+        return;
+      }
+
+      // Create task object
+      let task = {
+        text: taskValue,
+        completed: false
+      };
+
+      // Push task into array
+      tasks.push(task);
+
+      // Clear input field
+      taskInput.value = "";
+
+      // Display tasks
+      displayTasks();
+    }
+
+    // Display Tasks Function
+    function displayTasks(){
+      let taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      // Loop through tasks
+      for(let i = 0; i < tasks.length; i++){
+        let li = document.createElement("li");
+        let span = document.createElement("span");
+        span.innerText = tasks[i].text;
+        span.classList.add("task-text");
+
+        // Check completed condition
+        if(tasks[i].completed){
+          span.classList.add("completed");
+        }
+
+        // Buttons container
+        let buttonDiv = document.createElement("div");
+        buttonDiv.classList.add("buttons");
+
+        // Complete Button
+        let completeBtn = document.createElement("button");
+        completeBtn.innerText = tasks[i].completed ? "Pending" : "Complete";
+        completeBtn.classList.add("complete-btn");
+        completeBtn.onclick = function(){
+          toggleTask(i);
+        };
+
+        // Delete Button
+        let deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.onclick = function(){
+          deleteTask(i);
+        };
+
+        // Append buttons
+        buttonDiv.appendChild(completeBtn);
+        buttonDiv.appendChild(deleteBtn);
+
+        // Append elements
+        li.appendChild(span);
+        li.appendChild(buttonDiv);
+        taskList.appendChild(li);
+      }
+    }
+
+    // Toggle Complete/Pending
+    function toggleTask(index){
+      tasks[index].completed = !tasks[index].completed;
+      displayTasks();
+    }
+
+    // Delete Task Function
+    function deleteTask(index){
+      tasks.splice(index, 1);
+      displayTasks();
+    }
+  </script>
+</body>
+</html>
